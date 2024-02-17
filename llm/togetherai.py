@@ -103,3 +103,6 @@ def generate_output(page_data):
     ```start""" + str(page_data) + "end```## Output\n"
 
     return llm.invoke(input_)
+
+def generate_text(prompt, system_prompt=""):
+    return llm.invoke(system_prompt + '\n' + prompt)

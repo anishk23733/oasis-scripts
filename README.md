@@ -1,4 +1,4 @@
-# Backend for the ___
+# Backend for Oasis at TreeHacks 2024
 
 ### Setup
 
@@ -9,7 +9,7 @@ pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 ```
 
-Create a `.env` file with your `TOGETHER_API_KEY` from https://www.together.ai/ and `MONSTER_API_KEY` from https://monsterapi.ai/.
+Create a `.env` file with your `TOGETHER_API_KEY` from https://www.together.ai/, `MONSTER_API_KEY` from https://monsterapi.ai/, and `PREDICTIONGUARD_TOKEN` from Intel Developer Cloud.
 
 ### Pipeline
 
