@@ -1,4 +1,6 @@
 pypdf2
 BeautifulSoup4
 spacy
-dotenv
+langchain
+python-dotenv
+predictionguard

@@ -39,6 +39,11 @@ for company in data.keys():
 
         json_path = item + '.json'
         parent_dir = os.path.join('text', company)
+        
+        # This report has already been parsed
+        if os.path.exists(os.path.join(parent_dir, json_path)):
+            continue
+
         if not os.path.exists(parent_dir):
             os.mkdir(parent_dir)
 

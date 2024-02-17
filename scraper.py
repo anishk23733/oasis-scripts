@@ -27,6 +27,9 @@ def get_company_url(company):
 
     if company_name not in data:
         data[company_name] = []
+    else:
+        # If company is already done, don't do it
+        return
 
     company_url = make_url(first_company['href'])
     response = requests.get(company_url)
