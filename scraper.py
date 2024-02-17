@@ -5,6 +5,9 @@ import re
 
 import json
 
+companies = ['nvidia', 'apple', 'microsoft', 'tesla', 'intel', 'qualcomm', 'advanced micro devices', 'Taiwan Semiconductor Manufacturing']
+OLDEST_YEAR = 2019
+
 search_url = lambda x: f"https://www.responsibilityreports.com/Companies?search={x}"
 make_url = lambda x: f"https://www.responsibilityreports.com{x}"
 
@@ -47,7 +50,8 @@ def get_company_url(company):
 
         report_url = make_url(most_recent['href'])
         response = requests.get(report_url)
-        file_name = f"{most_recent.text[:4]}.pdf"
+        year = most_recent.text[:4]
+        file_name = f"{year}.pdf"
         data[company_name].append(most_recent.text[:4])
         with open(os.path.join(parent_dir, file_name), 'wb') as f:
             f.write(response.content)
@@ -60,17 +64,20 @@ def get_company_url(company):
         response = requests.get(make_url(link))
         try:
             title = span.parent.find('span', class_="heading").text
-            file_name = f"{str(title)[:4]}.pdf"
-            data[company_name].append(str(title)[:4])
+            year = str(title)[:4]
+            if int(year) < OLDEST_YEAR:
+                return
+            file_name = f"{year}.pdf"
+            data[company_name].append(year)
             with open(os.path.join(parent_dir, file_name), 'wb') as f:
                 f.write(response.content)
         except:
             print("Older report failed.")
-
-companies = ['nvidia', 'apple', 'microsoft', 'tesla']
-
+    
 for company in companies:
     get_company_url(company)
+    with open("database.json", 'w') as f:
+        json.dump(data, f)
 
 with open("database.json", 'w') as f:
     json.dump(data, f)
