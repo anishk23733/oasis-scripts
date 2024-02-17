@@ -14,6 +14,6 @@ Create a `.env` file with your `TOGETHER_API_KEY` from https://www.together.ai/,
 ### Pipeline
 
 First run `scraper.py` to build a `database.json` and pull documents. 
-Then run `pdf.py` to pull text data from the scraped documents and cache them.
-Then run `process_pages.py` to run LLaMA 2 on these documents and extract key metrics for Oasis.
+Then run `cache_pdf.py` to pull text data from the scraped documents and cache them.
+Then run `llm_page_parse.py` to run LLaMA 2 on these documents and extract key metrics for Oasis.
 Then run `clean.py` to clean up the keyword data and save it in a more logical format.

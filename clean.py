@@ -45,25 +45,18 @@ for company in data.keys():
 
         for page in llm_data['parsed_pages']:
             if type(page) == list:
-                sub_page0 = find_substring(page[0], '```start', 'end```')
-                sub_page1 = find_substring(page[1], '```start', 'end```')
                 combined = []
-                if sub_page0:
-                    try: 
-                        combined += json.loads(sub_page0)
-                    except:
-                        pass
-                if sub_page1:
-                    try: 
-                        combined += json.loads(sub_page1)
+                for sub_page in page:
+                    sub_page = find_substring(sub_page, '```start', 'end```')
+                    try:
+                        combined += json.loads(sub_page)
                     except:
                         pass
                 parse_data += combined
             else:
                 sub_page = find_substring(page, '```start', 'end```')
                 try:
-                    data = json.loads(sub_page)
-                    parse_data += data
+                    parse_data += json.loads(sub_page)
                 except:
                     pass
         
