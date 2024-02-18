@@ -30,6 +30,8 @@ class RAG():
             "filter": {}
         })
 
+        self.model = model
+
         self.company = company
 
         template = """
