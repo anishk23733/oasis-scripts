@@ -13,8 +13,12 @@ from sqlalchemy.exc import OperationalError
 
 from langchain.embeddings import HuggingFaceEmbeddings
 
+from pymongo import MongoClient
+
 # embeddings = TogetherEmbeddings(model="togethercomputer/m2-bert-80M-2k-retrieval")
 embeddings = HuggingFaceEmbeddings(model_name="all-mpnet-base-v2")
+
+client = MongoClient()
 
 username = 'SUPERUSER'
 password = 'oasis' # Replace password with password you set 
@@ -36,6 +40,8 @@ db = IRISVector(
 db.delete_collection()
 db.create_collection()
 
+client.vectordb.company_key_data.drop()
+
 with open("database.json", 'r') as f:
     data = json.load(f)
 
@@ -48,13 +54,20 @@ for company in data.keys():
             cleaned_data = json.load(f)
 
         docs = []
+        entries = []
 
         for entry in tqdm.tqdm(cleaned_data):
             entry['year'] = year
             entry['company'] = company
 
+            entries.append(entry)
             docs.append(Document(page_content=entry["description"], metadata=entry))
             if len(docs) > 20:
+                # Upload batch to MongoDB
+                if entries:
+                    client.vectordb.company_key_data.insert_many(entries)
+                
+                # Upload batch to IRIS
                 uploaded = False
                 while not uploaded:
                     try:
@@ -63,7 +76,13 @@ for company in data.keys():
                     except (OperationalError):
                         time.sleep(2)
                 docs = []
+                entries = []
         
+        # Upload batch to MongoDB
+        if entries:
+            client.vectordb.company_key_data.insert_many(entries)
+
+        # Upload batch to IRIS
         uploaded = False
         while not uploaded:
             try:

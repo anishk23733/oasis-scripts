@@ -36,6 +36,8 @@ git clone git@github.com:alvin-isc/treehacks-2024.git intersystems
 cd intersystems
 docker run -d --name iris-comm -p 1972:1972 -p 52773:52773 intersystemsdc/iris-community:2024.1-preview
 pip install -r requirements.txt
+
+docker run -d -p 27017:27017 --name test-mongo mongo:latest
 ```
 
 Follow other instructions at https://github.com/alvin-isc/treehacks-2024/blob/main/demo/langchain_demo.ipynb to get the IRIS password set up.
