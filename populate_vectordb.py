@@ -40,10 +40,12 @@ db = IRISVector(
 db.delete_collection()
 db.create_collection()
 
-client.vectordb.company_key_data.drop()
+client.vectordb.drop_collection("company_key_data")
 
 with open("database.json", 'r') as f:
     data = json.load(f)
+
+BATCH_SIZE=1
 
 for company in data.keys():
     for year in data[company]:
@@ -61,12 +63,9 @@ for company in data.keys():
             entry['company'] = company
 
             entries.append(entry)
+            # Upload entry to MongoDB
             docs.append(Document(page_content=entry["description"], metadata=entry))
-            if len(docs) > 20:
-                # Upload batch to MongoDB
-                if entries:
-                    client.vectordb.company_key_data.insert_many(entries)
-                
+            if len(docs) > BATCH_SIZE:
                 # Upload batch to IRIS
                 uploaded = False
                 while not uploaded:
@@ -76,12 +75,12 @@ for company in data.keys():
                     except (OperationalError):
                         time.sleep(2)
                 docs = []
+
+                # Upload batch to MongoDB
+                if entries:
+                    client.vectordb.company_key_data.insert_many(entries)
                 entries = []
         
-        # Upload batch to MongoDB
-        if entries:
-            client.vectordb.company_key_data.insert_many(entries)
-
         # Upload batch to IRIS
         uploaded = False
         while not uploaded:
@@ -90,5 +89,9 @@ for company in data.keys():
                 uploaded = True
             except (OperationalError):
                 time.sleep(2)
+        
+        # Upload batch to MongoDB
+        if entries:
+            client.vectordb.company_key_data.insert_many(entries)
         time.sleep(.1)
         # break
