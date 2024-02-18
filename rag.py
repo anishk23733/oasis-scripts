@@ -7,8 +7,7 @@ from langchain_together import Together
 from dotenv import load_dotenv
 
 class RAG():
-    def __init__(self, company):
-        load_dotenv()
+    def __init__(self, company, model):
         embeddings = HuggingFaceEmbeddings(model_name="all-mpnet-base-v2")
 
         username = 'SUPERUSER'
@@ -32,14 +31,6 @@ class RAG():
         })
 
         self.company = company
-
-        # Initialize the Together model
-        self.model = Together(
-            model="mistralai/Mixtral-8x7B-Instruct-v0.1",
-            temperature=0.7,
-            max_tokens=1024,
-            top_k=50,
-        )
 
         template = """
         <s>[INST] You are an agent speaking with a representative from {company}.
@@ -91,5 +82,12 @@ class RAG():
 
 if __name__ == "__main__":
     company = "NVIDIA Corporation"
-    r = RAG()
+    load_dotenv()
+    model = Together(
+        model="mistralai/Mixtral-8x7B-Instruct-v0.1",
+        temperature=0.7,
+        max_tokens=1024,
+        top_k=50,
+    )
+    r = RAG(company, model)
     r.chat_interface()
