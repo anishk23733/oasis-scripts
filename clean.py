@@ -42,6 +42,7 @@ for company in data.keys():
 
         with open(path, 'r') as f:
             llm_data = json.load(f)
+        i = 0
 
         for page in llm_data['parsed_pages']:
             if type(page) == list:
@@ -49,14 +50,22 @@ for company in data.keys():
                 for sub_page in page:
                     sub_page = find_substring(sub_page, '```start', 'end```')
                     try:
-                        combined += json.loads(sub_page)
+                        parsed = json.loads(sub_page)
+                        for val in parsed:
+                            val["id"] = f"{year}.{i}"
+                            i += 1
+                        combined += parsed
                     except:
                         pass
                 parse_data += combined
             else:
                 sub_page = find_substring(page, '```start', 'end```')
                 try:
-                    parse_data += json.loads(sub_page)
+                    parsed = json.loads(sub_page)
+                    for val in parsed:
+                        val["id"] = f"{year}.{i}"
+                        i += 1
+                    parse_data += parsed
                 except:
                     pass
         

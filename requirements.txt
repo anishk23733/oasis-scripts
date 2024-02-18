@@ -4,3 +4,5 @@ spacy
 langchain
 python-dotenv
 predictionguard
+langchain-together
+monsterapi==1.0.2b3
