@@ -8,6 +8,9 @@ import tqdm
 import threading
 import time
 
+generate_text = generate_text_monster # run both intel and monster
+generate_text = generate_text_intel
+
 generate_text = generate_text_togetherai
 
 def generate_prompt(page_data):
